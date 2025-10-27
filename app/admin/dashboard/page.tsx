@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Plus, Edit, Trash2, LogOut, ExternalLink } from 'lucide-react'
+import { Plus, Edit, Trash2, LogOut, ExternalLink, BookOpen, FolderKanban } from 'lucide-react'
+import BlogForm from './BlogForm'
 
 interface Project {
   id: string
@@ -14,15 +15,32 @@ interface Project {
   demo: string
 }
 
+interface BlogArticle {
+  id: string
+  title: string
+  excerpt: string
+  content: string
+  date: string
+  readTime: string
+  category: string
+  image: string
+  author: string
+  published: boolean
+}
+
 export default function AdminDashboard() {
+  const [activeTab, setActiveTab] = useState<'projects' | 'blog'>('projects')
   const [projects, setProjects] = useState<Project[]>([])
+  const [articles, setArticles] = useState<BlogArticle[]>([])
   const [showForm, setShowForm] = useState(false)
+  const [showBlogForm, setShowBlogForm] = useState(false)
   const [editingProject, setEditingProject] = useState<Project | null>(null)
+  const [editingArticle, setEditingArticle] = useState<BlogArticle | null>(null)
   const router = useRouter()
 
   useEffect(() => {
-    // Charger auth et projets en parallèle pour plus de rapidité
-    Promise.all([checkAuth(), loadProjects()])
+    // Charger auth, projets et articles en parallèle
+    Promise.all([checkAuth(), loadProjects(), loadArticles()])
   }, [])
 
   const checkAuth = async () => {
@@ -50,6 +68,18 @@ export default function AdminDashboard() {
     }
   }
 
+  const loadArticles = async () => {
+    try {
+      const res = await fetch('/api/blog', {
+        cache: 'no-store'
+      })
+      const data = await res.json()
+      setArticles(data)
+    } catch (error) {
+      console.error('Error loading articles:', error)
+    }
+  }
+
   const handleLogout = async () => {
     await fetch('/api/admin/logout', { method: 'POST' })
     router.push('/admin')
@@ -62,6 +92,13 @@ export default function AdminDashboard() {
     loadProjects()
   }
 
+  const deleteArticle = async (id: string) => {
+    if (!confirm('Voulez-vous vraiment supprimer cet article ?')) return
+
+    await fetch(`/api/blog/${id}`, { method: 'DELETE' })
+    loadArticles()
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-8">
       <div className="max-w-7xl mx-auto">
@@ -69,7 +106,7 @@ export default function AdminDashboard() {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-4xl font-bold text-white mb-2">Admin Dashboard</h1>
-            <p className="text-gray-400">Gérez vos projets</p>
+            <p className="text-gray-400">Gérez votre portfolio et blog</p>
           </div>
           <button
             onClick={handleLogout}
@@ -80,20 +117,52 @@ export default function AdminDashboard() {
           </button>
         </div>
 
-        {/* Add Project Button */}
+        {/* Tabs */}
+        <div className="flex gap-4 mb-8 border-b border-white/10">
+          <button
+            onClick={() => setActiveTab('projects')}
+            className={`flex items-center gap-2 px-6 py-3 font-semibold transition-colors ${
+              activeTab === 'projects'
+                ? 'text-blue-400 border-b-2 border-blue-400'
+                : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            <FolderKanban size={20} />
+            Projets ({projects.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('blog')}
+            className={`flex items-center gap-2 px-6 py-3 font-semibold transition-colors ${
+              activeTab === 'blog'
+                ? 'text-blue-400 border-b-2 border-blue-400'
+                : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            <BookOpen size={20} />
+            Blog ({articles.length})
+          </button>
+        </div>
+
+        {/* Add Button */}
         <button
           onClick={() => {
-            setEditingProject(null)
-            setShowForm(true)
+            if (activeTab === 'projects') {
+              setEditingProject(null)
+              setShowForm(true)
+            } else {
+              setEditingArticle(null)
+              setShowBlogForm(true)
+            }
           }}
           className="flex items-center gap-2 px-6 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors mb-8 shadow-lg shadow-primary-500/50"
         >
           <Plus size={20} />
-          Ajouter un projet
+          {activeTab === 'projects' ? 'Ajouter un projet' : 'Nouvel article'}
         </button>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {activeTab === 'projects' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project) => (
             <div key={project.id} className="glass rounded-xl overflow-hidden">
               <div className="relative h-48">
@@ -140,9 +209,62 @@ export default function AdminDashboard() {
               </div>
             </div>
           ))}
-        </div>
+          </div>
+        )}
 
-        {/* Form Modal */}
+        {/* Blog Articles Grid */}
+        {activeTab === 'blog' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {articles.map((article) => (
+              <div key={article.id} className="glass rounded-xl overflow-hidden">
+                <div className="relative h-48">
+                  <img
+                    src={article.image}
+                    alt={article.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-4 left-4">
+                    <span className="px-3 py-1 bg-blue-600 text-white rounded-full text-xs font-semibold">
+                      {article.category}
+                    </span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-white mb-2">{article.title}</h3>
+                  <p className="text-gray-400 text-sm mb-4 line-clamp-3">
+                    {article.excerpt}
+                  </p>
+                  <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
+                    <span>{article.date}</span>
+                    <span>•</span>
+                    <span>{article.readTime}</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        setEditingArticle(article)
+                        setShowBlogForm(true)
+                      }}
+                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-500/20 text-blue-400 rounded hover:bg-blue-500/30 transition-colors"
+                    >
+                      <Edit size={16} />
+                      Modifier
+                    </button>
+                    <button
+                      onClick={() => deleteArticle(article.id)}
+                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-red-500/20 text-red-400 rounded hover:bg-red-500/30 transition-colors"
+                    >
+                      <Trash2 size={16} />
+                      Supprimer
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Project Form Modal */}
         {showForm && (
           <ProjectForm
             project={editingProject}
@@ -154,6 +276,22 @@ export default function AdminDashboard() {
               loadProjects()
               setShowForm(false)
               setEditingProject(null)
+            }}
+          />
+        )}
+
+        {/* Blog Form Modal */}
+        {showBlogForm && (
+          <BlogForm
+            article={editingArticle}
+            onClose={() => {
+              setShowBlogForm(false)
+              setEditingArticle(null)
+            }}
+            onSave={() => {
+              loadArticles()
+              setShowBlogForm(false)
+              setEditingArticle(null)
             }}
           />
         )}

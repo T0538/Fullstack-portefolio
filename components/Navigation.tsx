@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
+import Link from 'next/link'
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -17,10 +18,11 @@ export default function Navigation() {
   }, [])
 
   const navItems = [
-    { name: 'Accueil', href: '#hero' },
+    { name: 'Accueil', href: '#' },
     { name: 'À propos', href: '#about' },
     { name: 'Compétences', href: '#skills' },
     { name: 'Projets', href: '#projects' },
+    { name: 'Blog', href: '/blog', prefetch: true },
     { name: 'Contact', href: '#contact' },
   ]
 
@@ -44,27 +46,42 @@ export default function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-8 items-center">
-            {navItems.map((item, index) => (
-              <motion.a
-                key={item.name}
-                href={item.href}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ 
-                  scale: 1.1,
-                  y: -2,
-                  transition: { duration: 0.2 }
-                }}
-                whileTap={{ scale: 0.95 }}
-                className="text-gray-700 hover:text-blue-600 transition-colors duration-200 font-medium relative group"
-              >
-                {item.name}
-                <motion.span
-                  className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"
-                />
-              </motion.a>
-            ))}
+            {navItems.map((item, index) => {
+              const isExternal = item.href.startsWith('/blog')
+              const Component = isExternal ? Link : motion.a
+              
+              return (
+                <motion.div key={item.name}>
+                  {isExternal ? (
+                    <Link
+                      href={item.href}
+                      prefetch={true}
+                      className="text-gray-700 hover:text-blue-600 transition-colors duration-200 font-medium relative group"
+                    >
+                      {item.name}
+                      <motion.span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
+                    </Link>
+                  ) : (
+                    <motion.a
+                      href={item.href}
+                      initial={{ opacity: 0, y: -20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      whileHover={{ 
+                        scale: 1.1,
+                        y: -2,
+                        transition: { duration: 0.2 }
+                      }}
+                      whileTap={{ scale: 0.95 }}
+                      className="text-gray-700 hover:text-blue-600 transition-colors duration-200 font-medium relative group"
+                    >
+                      {item.name}
+                      <motion.span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
+                    </motion.a>
+                  )}
+                </motion.div>
+              )
+            })}
           </div>
 
           {/* Mobile Menu Button */}

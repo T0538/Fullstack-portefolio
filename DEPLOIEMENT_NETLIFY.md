@@ -27,8 +27,9 @@ git add .
 # Créer un commit
 git commit -m "Prêt pour déploiement Netlify"
 
+
 # Créer un repo sur GitHub puis:
-git remote add origin https://github.com/VOTRE_USERNAME/portfolio.git
+git remote add origin https://github.com/T0538/Fullstack-portefolio.git
 git branch -M main
 git push -u origin main
 ```
