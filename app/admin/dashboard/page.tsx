@@ -394,28 +394,23 @@ function ProjectForm({
           </div>
 
           <div>
-            <label className="block text-white font-medium mb-2">Image</label>
+            <label className="block text-white font-medium mb-2">URL de l'image</label>
             <input
               type="text"
               value={formData.image}
               onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-              placeholder="https://images.unsplash.com/photo-xxx ou URL de votre image"
+              placeholder="https://i.imgur.com/xxxxx.jpg"
               className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-primary-500 mb-2"
+              required
             />
-            <details className="text-gray-400 text-xs">
-              <summary className="cursor-pointer hover:text-white">Ou uploader un fichier (local uniquement)</summary>
-              <input
-                type="file"
-                onChange={handleImageUpload}
-                accept="image/*"
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-primary-500 file:text-white hover:file:bg-primary-600 mt-2"
-              />
-              <p className="text-yellow-400 mt-1">⚠️ Upload fichier non disponible sur Netlify</p>
-            </details>
+            <p className="text-gray-400 text-xs mb-2">
+              💡 Utilisez <a href="https://imgur.com" target="_blank" className="text-primary-400 hover:underline">Imgur</a> ou <a href="https://unsplash.com" target="_blank" className="text-primary-400 hover:underline">Unsplash</a> pour héberger vos images
+            </p>
             {formData.image && (
-              <img src={formData.image} alt="Preview" className="mt-2 h-32 rounded object-cover" />
+              <img src={formData.image} alt="Preview" className="mt-2 h-32 rounded object-cover" onError={(e) => {
+                e.currentTarget.style.display = 'none'
+              }} />
             )}
-            {uploading && <p className="text-primary-400 mt-2">Upload en cours...</p>}
           </div>
 
           <div>

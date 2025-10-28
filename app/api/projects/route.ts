@@ -11,7 +11,7 @@ const DEFAULT_PROJECTS = [
     "id": "1",
     "title": "MoviesZone - Streaming Platform",
     "description": "Plateforme de streaming moderne pour films et séries en HD. Interface élégante avec recherche avancée, filtres par genre, et lecteur vidéo intégré.",
-    "image": "/projects/1761602467250-Capture-d'écran-2025-10-27-020251.png",
+    "image": "https://images.unsplash.com/photo-1616530940355-351fabd9524b?w=800&q=80",
     "tags": ["React", "Vite", "TailwindCSS", "API REST"],
     "github": "https://moviezo.netlify.app/browse",
     "demo": "https://moviezo.netlify.app/browse"
@@ -20,7 +20,7 @@ const DEFAULT_PROJECTS = [
     "id": "1761533018284",
     "title": "Sorbo-Ingenierie",
     "description": "Sorbo-Ingénierie est un bureau d'études en génie civil basé à Abidjan qui réalise des études et suivis de travaux (topographie, SIG, infrastructures et voirie), développe des logiciels spécialisés (ex. OH-Route) et propose des formations techniques (AutoCAD, Covadis, Revit, etc.).",
-    "image": "/projects/1761602504790-Capture-d'écran-2025-10-27-024134.png",
+    "image": "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800&q=80",
     "tags": ["React", "HTML/CSS", "JavaScript"],
     "github": "https://sorbo-ingenierie.ci/",
     "demo": "https://sorbo-ingenierie.ci/"
@@ -29,7 +29,7 @@ const DEFAULT_PROJECTS = [
     "id": "1761604674156",
     "title": "Plateforme SaaS QHSE",
     "description": "Plateforme SaaS professionnelle pour la gestion de la Qualité, Hygiène, Sécurité et Environnement. Simplifiez, automatisez et optimisez vos processus QHSE.",
-    "image": "/projects/1761604576817-Capture-d'écran-2025-10-27-223508.png",
+    "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
     "tags": ["React", "Next.js"],
     "github": "https://qhse-enterprise.netlify.app/",
     "demo": "https://qhse-enterprise.netlify.app/"
