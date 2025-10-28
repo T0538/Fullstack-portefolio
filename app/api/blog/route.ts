@@ -1,33 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import fs from 'fs'
+import { promises as fs } from 'fs'
 import path from 'path'
 
 const DATA_DIR = path.join(process.cwd(), 'data')
 const BLOG_FILE = path.join(DATA_DIR, 'blog.json')
 
-// S'assurer que le répertoire data existe
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true })
+// Fonction pour lire les articles
+async function readArticles() {
+  try {
+    const data = await fs.readFile(BLOG_FILE, 'utf-8')
+    return JSON.parse(data)
+  } catch (error) {
+    // Si le fichier n'existe pas, retourner un tableau vide
+    return []
+  }
 }
 
-//initialiser le fichier blog s'il n'existe pas
-if (!fs.existsSync(BLOG_FILE)) {
-  const defaultArticles = [
-    {
-      id: '1',
-      title: 'Les tendances du développement web en 2024',
-      excerpt: 'Découvrez les technologies et frameworks qui façonnent l\'avenir du web development.',
-      content: '<h2>Contenu de l\'article...</h2><p>À compléter depuis l\'admin</p>',
-      date: '27 Oct 2024',
-      readTime: '5 min',
-      category: 'Web Dev',
-      image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80',
-      author: 'Développeur Full-Stack',
-      published: true
-    }
-  ]
-  fs.writeFileSync(BLOG_FILE, JSON.stringify(defaultArticles, null, 2))
+// Fonction pour écrire les articles
+async function writeArticles(articles: any[]) {
+  try {
+    // Créer le dossier data s'il n'existe pas
+    await fs.mkdir(DATA_DIR, { recursive: true })
+    await fs.writeFile(BLOG_FILE, JSON.stringify(articles, null, 2))
+  } catch (error) {
+    console.error('Error writing articles:', error)
+    throw error
+  }
 }
 
 // Vérifier l'authentification
@@ -39,7 +38,7 @@ function isAuthenticated(request: NextRequest) {
 // GET - Récupérer tous les articles
 export async function GET() {
   try {
-    const articles = JSON.parse(fs.readFileSync(BLOG_FILE, 'utf-8'))
+    const articles = await readArticles()
     
     return NextResponse.json(articles, {
       headers: {
@@ -48,6 +47,7 @@ export async function GET() {
       }
     })
   } catch (error) {
+    console.error('Error in GET /api/blog:', error)
     return NextResponse.json([], { status: 200 })
   }
 }
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const newArticle = await request.json()
-    const articles = JSON.parse(fs.readFileSync(BLOG_FILE, 'utf-8'))
+    const articles = await readArticles()
     
     // Générer un ID unique
     const id = Date.now().toString()
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
     }
     
     articles.push(articleWithId)
-    fs.writeFileSync(BLOG_FILE, JSON.stringify(articles, null, 2))
+    await writeArticles(articles)
     
     return NextResponse.json(articleWithId, { status: 201 })
   } catch (error) {

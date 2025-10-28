@@ -160,13 +160,24 @@ export default function BlogForm({
           <div>
             <label className="block text-white font-medium mb-2">Image de couverture</label>
             <input
-              type="file"
-              onChange={handleImageUpload}
-              accept="image/*"
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-primary-500 file:text-white hover:file:bg-primary-600"
+              type="text"
+              value={formData.image}
+              onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+              placeholder="https://images.unsplash.com/photo-xxx ou URL de votre image"
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-primary-500 mb-2"
             />
+            <details className="text-gray-400 text-xs">
+              <summary className="cursor-pointer hover:text-white">Ou uploader un fichier (local uniquement)</summary>
+              <input
+                type="file"
+                onChange={handleImageUpload}
+                accept="image/*"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-primary-500 file:text-white hover:file:bg-primary-600 mt-2"
+              />
+              <p className="text-yellow-400 mt-1">⚠️ Upload fichier non disponible sur Netlify</p>
+            </details>
             {formData.image && (
-              <img src={formData.image} alt="Preview" className="mt-2 h-32 rounded" />
+              <img src={formData.image} alt="Preview" className="mt-2 h-32 rounded object-cover" />
             )}
             {uploading && <p className="text-primary-400 mt-2">Upload en cours...</p>}
           </div>

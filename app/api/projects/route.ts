@@ -6,21 +6,40 @@ import { cookies } from 'next/headers'
 const projectsFile = path.join(process.cwd(), 'data', 'projects.json')
 
 async function readProjects() {
-  const data = await fs.readFile(projectsFile, 'utf-8')
-  return JSON.parse(data)
+  try {
+    const data = await fs.readFile(projectsFile, 'utf-8')
+    return JSON.parse(data)
+  } catch (error) {
+    // Si le fichier n'existe pas, retourner un tableau vide
+    return []
+  }
 }
 
 async function writeProjects(projects: any[]) {
-  await fs.writeFile(projectsFile, JSON.stringify(projects, null, 2))
+  try {
+    // Créer le dossier data s'il n'existe pas
+    const dataDir = path.join(process.cwd(), 'data')
+    await fs.mkdir(dataDir, { recursive: true })
+    await fs.writeFile(projectsFile, JSON.stringify(projects, null, 2))
+  } catch (error) {
+    console.error('Error writing projects:', error)
+    throw error
+  }
 }
 
 // GET - Récupérer tous les projets
 export async function GET() {
   try {
     const projects = await readProjects()
-    return NextResponse.json(projects)
+    return NextResponse.json(projects, {
+      headers: {
+        'Cache-Control': 'no-store, must-revalidate',
+      }
+    })
   } catch (error) {
-    return NextResponse.json({ error: 'Error reading projects' }, { status: 500 })
+    console.error('Error in GET /api/projects:', error)
+    // Retourner un tableau vide en cas d'erreur
+    return NextResponse.json([])
   }
 }
 

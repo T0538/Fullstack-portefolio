@@ -1,9 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import fs from 'fs'
+import { promises as fs } from 'fs'
 import path from 'path'
 
 const BLOG_FILE = path.join(process.cwd(), 'data', 'blog.json')
+
+// Fonction pour lire les articles
+async function readArticles() {
+  try {
+    const data = await fs.readFile(BLOG_FILE, 'utf-8')
+    return JSON.parse(data)
+  } catch (error) {
+    return []
+  }
+}
+
+// Fonction pour écrire les articles
+async function writeArticles(articles: any[]) {
+  try {
+    const dataDir = path.join(process.cwd(), 'data')
+    await fs.mkdir(dataDir, { recursive: true })
+    await fs.writeFile(BLOG_FILE, JSON.stringify(articles, null, 2))
+  } catch (error) {
+    console.error('Error writing articles:', error)
+    throw error
+  }
+}
 
 // Vérifier l'authentification
 function isAuthenticated(request: NextRequest) {
@@ -17,7 +39,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const articles = JSON.parse(fs.readFileSync(BLOG_FILE, 'utf-8'))
+    const articles = await readArticles()
     const article = articles.find((a: any) => a.id === params.id)
     
     if (!article) {
@@ -26,6 +48,7 @@ export async function GET(
     
     return NextResponse.json(article)
   } catch (error) {
+    console.error('Error in GET /api/blog/[id]:', error)
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
@@ -41,7 +64,7 @@ export async function PUT(
 
   try {
     const updatedArticle = await request.json()
-    const articles = JSON.parse(fs.readFileSync(BLOG_FILE, 'utf-8'))
+    const articles = await readArticles()
     
     const index = articles.findIndex((a: any) => a.id === params.id)
     if (index === -1) {
@@ -49,10 +72,11 @@ export async function PUT(
     }
     
     articles[index] = { ...articles[index], ...updatedArticle }
-    fs.writeFileSync(BLOG_FILE, JSON.stringify(articles, null, 2))
+    await writeArticles(articles)
     
     return NextResponse.json(articles[index])
   } catch (error) {
+    console.error('Error in PUT /api/blog/[id]:', error)
     return NextResponse.json(
       { error: 'Erreur lors de la modification' },
       { status: 500 }
@@ -70,13 +94,14 @@ export async function DELETE(
   }
 
   try {
-    const articles = JSON.parse(fs.readFileSync(BLOG_FILE, 'utf-8'))
+    const articles = await readArticles()
     const filteredArticles = articles.filter((a: any) => a.id !== params.id)
     
-    fs.writeFileSync(BLOG_FILE, JSON.stringify(filteredArticles, null, 2))
+    await writeArticles(filteredArticles)
     
     return NextResponse.json({ success: true })
   } catch (error) {
+    console.error('Error in DELETE /api/blog/[id]:', error)
     return NextResponse.json(
       { error: 'Erreur lors de la suppression' },
       { status: 500 }
