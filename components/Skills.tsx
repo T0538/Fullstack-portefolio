@@ -50,7 +50,7 @@ export default function Skills() {
   ]
 
   return (
-    <section id="skills" className="py-20 px-4 relative overflow-hidden">
+    <section id="skills" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Animated Decorative elements - ÉNORMES */}
       <motion.div 
         animate={{
@@ -63,7 +63,7 @@ export default function Skills() {
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="absolute top-20 left-10 w-[600px] h-[600px] bg-blue-500/15 rounded-full blur-3xl" 
+        className="absolute top-20 left-10 w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] lg:w-[600px] lg:h-[600px] bg-blue-500/15 rounded-full blur-3xl" 
       />
       <motion.div 
         animate={{
@@ -76,7 +76,7 @@ export default function Skills() {
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="absolute bottom-20 right-10 w-[700px] h-[700px] bg-purple-500/15 rounded-full blur-3xl" 
+        className="absolute bottom-20 right-10 w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] lg:w-[700px] lg:h-[700px] bg-purple-500/15 rounded-full blur-3xl" 
       />
       
       {/* Orbes supplémentaires magiques */}
@@ -91,7 +91,7 @@ export default function Skills() {
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="absolute top-1/3 right-1/3 w-[500px] h-[500px] bg-gradient-to-br from-pink-500/10 to-cyan-500/10 rounded-full blur-3xl"
+        className="hidden sm:block absolute top-1/3 right-1/3 w-[250px] h-[250px] lg:w-[500px] lg:h-[500px] bg-gradient-to-br from-pink-500/10 to-cyan-500/10 rounded-full blur-3xl"
       />
       
       {/* Floating Particles */}
@@ -121,26 +121,26 @@ export default function Skills() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-8 sm:mb-12 lg:mb-16"
         >
           <motion.div
             initial={{ scale: 0 }}
             whileInView={{ scale: 1 }}
             transition={{ duration: 0.5, type: 'spring' }}
-            className="inline-block mb-4 text-6xl"
+            className="inline-block mb-3 sm:mb-4 text-4xl sm:text-5xl md:text-6xl"
           >
             💻
           </motion.div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 sm:mb-6">
             Ce que j'aime <span className="gradient-text">créer</span>
           </h2>
-          <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed px-4">
             Passionné par le développement, je transforme des lignes de code en expériences qui comptent. 
             Voici mes outils préférés pour construire des projets innovants.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 xl:gap-10">
           {skillCategories.map((category, categoryIndex) => (
             <motion.div
               key={categoryIndex}
@@ -172,13 +172,13 @@ export default function Skills() {
                 <div className="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-blue-900/90 to-slate-900/95 group-hover:from-slate-900/85 group-hover:via-blue-900/75 group-hover:to-slate-900/85 transition-all duration-500" />
                 
                 {/* Content */}
-                <div className="relative z-10 h-full p-8 flex flex-col">
+                <div className="relative z-10 h-full p-6 sm:p-8 flex flex-col">
                   {/* Icon & Emoji */}
-                  <div className="flex items-center gap-4 mb-6">
+                  <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
                     <motion.div
                       whileHover={{ rotate: 360, scale: 1.2 }}
                       transition={{ duration: 0.6 }}
-                      className="text-5xl drop-shadow-lg"
+                      className="text-4xl sm:text-5xl drop-shadow-lg"
                     >
                       {category.emoji}
                     </motion.div>
@@ -188,24 +188,24 @@ export default function Skills() {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-blue-300 transition-colors duration-300">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3 group-hover:text-blue-300 transition-colors duration-300">
                     {category.name}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-gray-300 text-sm mb-6 leading-relaxed opacity-90 group-hover:opacity-100 transition-opacity duration-300">
+                  <p className="text-gray-300 text-xs sm:text-sm mb-4 sm:mb-6 leading-relaxed opacity-90 group-hover:opacity-100 transition-opacity duration-300">
                     {category.description}
                   </p>
 
                   {/* Skills as Tags */}
-                  <div className="flex flex-wrap gap-2 mt-auto">
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-auto">
                     {category.skills.map((skill, skillIndex) => (
                       <motion.span
                         key={skillIndex}
                         initial={{ opacity: 0, scale: 0.8 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         transition={{ delay: categoryIndex * 0.15 + skillIndex * 0.1 }}
-                        className="px-4 py-2 bg-white/5 group-hover:bg-white/15 text-white text-sm rounded-full backdrop-blur-md transition-all duration-300 cursor-default"
+                        className="px-3 py-1.5 sm:px-4 sm:py-2 bg-white/5 group-hover:bg-white/15 text-white text-xs sm:text-sm rounded-full backdrop-blur-md transition-all duration-300 cursor-default"
                       >
                         {skill}
                       </motion.span>
@@ -223,9 +223,9 @@ export default function Skills() {
           whileInView={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
           viewport={{ once: true }}
-          className="mt-16 text-center"
+          className="mt-8 sm:mt-12 lg:mt-16 text-center"
         >
-          <p className="text-gray-600 italic text-lg">
+          <p className="text-gray-600 italic text-sm sm:text-base md:text-lg px-4">
             "La technologie est mon outil, mais l'humain reste au centre de chaque projet" 🌟
           </p>
         </motion.div>

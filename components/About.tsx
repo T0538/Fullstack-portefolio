@@ -28,7 +28,7 @@ export default function About() {
   ]
 
   return (
-    <section id="about" className="py-20 px-4 relative overflow-hidden">
+    <section id="about" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Animated Background Elements - AGRANDIS */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <motion.div
@@ -42,7 +42,7 @@ export default function About() {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute top-10 right-20 w-[500px] h-[500px] bg-blue-400/10 rounded-full blur-3xl"
+          className="absolute top-10 right-20 w-[250px] h-[250px] sm:w-[350px] sm:h-[350px] lg:w-[500px] lg:h-[500px] bg-blue-400/10 rounded-full blur-3xl"
         />
         <motion.div
           animate={{
@@ -55,7 +55,7 @@ export default function About() {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute bottom-20 left-10 w-[600px] h-[600px] bg-purple-400/10 rounded-full blur-3xl"
+          className="absolute bottom-20 left-10 w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] lg:w-[600px] lg:h-[600px] bg-purple-400/10 rounded-full blur-3xl"
         />
         
         {/* Éléments fantastiques supplémentaires */}
@@ -69,7 +69,7 @@ export default function About() {
             repeat: Infinity,
             ease: "linear"
           }}
-          className="absolute top-1/2 left-1/2 w-[400px] h-[400px] border-2 border-cyan-300/20 rounded-full"
+          className="hidden sm:block absolute top-1/2 left-1/2 w-[250px] h-[250px] lg:w-[400px] lg:h-[400px] border-2 border-cyan-300/20 rounded-full"
         />
       </div>
 
@@ -79,19 +79,19 @@ export default function About() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-8 sm:mb-12 lg:mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4">
             À Propos de <span className="gradient-text">Moi</span>
           </h2>
-          <p className="text-xl text-gray-700 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-gray-700 max-w-3xl mx-auto px-4">
             Développeur fullstack passionné avec une expertise dans la création
             d'applications web modernes. Je combine créativité et compétences
             techniques pour donner vie à vos projets.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {features.map((feature, index) => (
             <motion.div
               key={index}
@@ -109,10 +109,10 @@ export default function About() {
                 y: -10,
                 transition: { duration: 0.3 }
               }}
-              className="bg-white/80 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white transition-all duration-300 shadow-md hover:shadow-2xl border border-blue-100 group"
+              className="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 text-center hover:bg-white transition-all duration-300 shadow-md hover:shadow-2xl border border-blue-100 group"
             >
               <motion.div 
-                className="inline-block p-4 bg-blue-500/20 rounded-lg mb-4 text-blue-600"
+                className="inline-block p-3 sm:p-4 bg-blue-500/20 rounded-lg mb-3 sm:mb-4 text-blue-600"
                 whileHover={{ 
                   rotate: 360,
                   scale: 1.2,
@@ -121,10 +121,10 @@ export default function About() {
               >
                 {feature.icon}
               </motion.div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 {feature.title}
               </h3>
-              <p className="text-gray-600">{feature.description}</p>
+              <p className="text-sm sm:text-base text-gray-600">{feature.description}</p>
             </motion.div>
           ))}
         </div>
